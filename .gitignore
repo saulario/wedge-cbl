@@ -1,3 +1,8 @@
+# de compilar cobol
+*.c
+*.h
+*.i
+
 # Prerequisites
 *.d
 

@@ -1,0 +1,78 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. LIB-COMMON.
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+        REPOSITORY. FUNCTION ALL INTRINSIC.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+        01 V1 PIC X(255) VALUE "JORGITO".
+        01 V2 PIC X(255) VALUE "JAIMITO".
+        01 CONTEXTO.
+            05 USUARIO  PIC X(10).
+            05 SESION   PIC X(40).
+            05 FILLER   PIC X(205).
+       PROCEDURE DIVISION.
+        CALL "LC5-INIT-PROGRAM" USING V1 V2 BY REFERENCE CONTEXTO
+        DISPLAY RETURN-CODE
+        DISPLAY CONTEXTO
+        STOP RUN.
+       END PROGRAM LIB-COMMON.
+
+      ******************************************************************
+      *
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. LC5-INIT-PROGRAM.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+        01 LEN          PIC 9(4).
+       LINKAGE SECTION.
+        01 ARG0         PIC X(255). *> SESION
+        01 ARG1         PIC X(255). *> USUARIO
+        01 CONTEXTO.
+            05 USUARIO  PIC X(10).
+            05 SESION   PIC X(40).
+            05 FILLER   PIC X(205).
+       PROCEDURE DIVISION USING ARG0 ARG1 BY REFERENCE CONTEXTO.
+
+        IF ARG0 = SPACES OR ARG1 = SPACES
+            MOVE -1 TO RETURN-CODE
+            GOBACK
+        END-IF
+
+        MOVE FUNCTION LENGTH(ARG0) TO LEN
+        CALL "CBL_TOUPPER" USING ARG0 BY VALUE LEN
+        MOVE ARG0 TO SESION
+
+        MOVE FUNCTION LENGTH(ARG1) TO LEN
+        CALL "CBL_TOUPPER" USING ARG1 BY VALUE LEN
+        MOVE ARG1 TO USUARIO
+
+        MOVE 0 TO RETURN-CODE
+        GOBACK. 
+       END PROGRAM LC5-INIT-PROGRAM.
+
+      ******************************************************************
+      *
+       IDENTIFICATION DIVISION.
+       FUNCTION-ID. LC5-LDA-IN.
+       DATA DIVISION.
+       LINKAGE SECTION.
+       01 LDA PIC X(255).
+       PROCEDURE DIVISION RETURNING LDA.
+        MOVE "HOLA MUNDO" TO LDA
+        MOVE -1 TO RETURN-CODE
+        GOBACK.
+       END FUNCTION LC5-LDA-IN.
+
+      ******************************************************************
+      *
+       IDENTIFICATION DIVISION. 
+       PROGRAM-ID. LC5-LDA-OUT.
+       DATA DIVISION.
+       LINKAGE SECTION.
+       01 LDA PIC X(255).
+       PROCEDURE DIVISION USING BY REFERENCE LDA.
+        DISPLAY LDA
+        MOVE 100 TO RETURN-CODE
+        GOBACK.
+       END PROGRAM LC5-LDA-OUT. 

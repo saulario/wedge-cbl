@@ -1,0 +1,43 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. MNU001 IS INITIAL.
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       REPOSITORY.
+        FUNCTION ALL INTRINSIC
+        FUNCTION LC5-LDA-IN .
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+        01 CONTEXTO.
+            05 USUARIO          PIC X(10).
+            05 SESION           PIC X(10).
+            05 FILLER           PIC X(205).
+        01 LEN                  PIC 9(4) USAGE COMP-5.
+        01 LDA                  PIC X(255).
+      *  
+        01 ARG0                 PIC X(255).
+        01 ARG1                 PIC X(255).
+
+       PROCEDURE DIVISION CHAINING ARG0 ARG1.
+
+        CALL "LC5-INIT-PROGRAM" USING 
+            BY CONTENT ARG0
+            BY CONTENT ARG1
+            BY REFERENCE CONTEXTO
+        DISPLAY RETURN-CODE
+
+        MOVE LENGTH(ARG0) TO LEN
+        CALL "CBL_TOUPPER" USING ARG0 BY VALUE LEN
+
+        DISPLAY ARG0
+        DISPLAY ARG1
+
+        MOVE FUNCTION LC5-LDA-IN() TO LDA
+        DISPLAY LDA        
+        DISPLAY RETURN-CODE        
+
+        MOVE "BAILANDO LAMBADA" TO LDA
+        CALL "LC5-LDA-OUT" USING LDA
+        DISPLAY RETURN-CODE
+
+        STOP RUN. 
+
